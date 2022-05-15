@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.nlp4j</groupId>
+	<artifactId>hello-jib</artifactId>
+	<version>0.0.1.0</version>
+	<properties>
+		<!-- 変数 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- 変数 -->
+		<java.version>1.8</java.version>
+		<encoding>UTF-8</encoding>
+	</properties>
+	<build>
+		<!-- https://docs.microsoft.com/ja-jp/azure/app-service/app-service-web-get-started-java -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<!-- ここでJavaのバージョンを設定する -->
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<!-- mvn compile jib:dockerBuild -->
+			<!-- https://cloud.google.com/java/getting-started/jib -->
+			<!-- https://mvnrepository.com/artifact/com.google.cloud.tools/jib-maven-plugin -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<container>
+						<!-- mainClass>com.acms.analytics.batch.Main</mainClass -->
+						<!-- entrypoint>docker/entrypoint.sh</entrypoint -->
+						<entrypoint>
+							<arg>/bin/sh</arg>
+							<!-- create and edit src/main/jib/my-entrypoint.sh -->
+							<arg>my-entrypoint.sh</arg>
+						</entrypoint>
+						<!-- https://github.com/GoogleContainerTools/jib/blob/v2.1.0-maven/docs/faq.md#why-is-my-image-created-48-years-ago -->
+						<creationTime>2022-01-01T00:00:00+09:00</creationTime>
+					</container>
+					<extraDirectories>
+						<permissions>
+							<permission>
+								<file>/docker/entrypoint.sh</file>
+								<mode>755</mode>
+							</permission>
+						</permissions>
+					</extraDirectories>
+					<!-- ports -->
+					<!-- port>8080</port -->
+					<!-- /ports -->
+					<environment>
+						<application.title>hello-jib</application.title>
+						<application.version>0.0.1.0</application.version>
+						<!-- KEY=VALUE -->
+						<KEY>VALUE</KEY>
+					</environment>
+					<!-- jvmFlags -->
+					<!-- jvmFlag>-javaagent:/usr/local/newrelic/newrelic.jar</jvmFlag -->
+					<!-- /jvmFlags -->
+					<!-- from -->
+						<!-- image>mcr.microsoft.com/java/jre:11-zulu-ubuntu</image -->
+						<!-- image>mcr.microsoft.com/java/jdk:8-zulu-alpine</image -->
+						<!-- image>openjdk:8-alpine</image -->
+						<!-- image>openjdk</image -->
+						<!-- image>gcr.io/distroless/java:debug</image -->
+						<!-- image>ubuntu</image -->
+						<!-- adoptopenjdk includes shell -->
+						<!-- https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#where-is-bash -->
+						<!-- image>adoptopenjdk</image -->
+						<image>openjdk:11-jre</image>
+					<!--  /from -->
+					<to>
+						<image>oyahiroki/hello-jib</image>
+					</to>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
